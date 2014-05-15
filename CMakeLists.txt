@@ -14,13 +14,13 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 project(wxWidgets)
 
 # Note that while I have successfully put this file in a subdirectory 
-# (namely build/cmake/), this meant that WX_SOURCE_DIR would point
+# (namely build/cmake/), this meant that PROJECT_SOURCE_DIR would point
 # to the build system, and not the source tree. This could be very confusing
 # especially if wxWidgets is to be embedded in a larger tree.
 # If this needs to be done again (because we see there is no issue after all)
-# one needs to change the WX_TOP definition above.
-# This is also the reason why neither WX_SOURCE_DIR nor CMAKE_SOURCE_DIR
-# are never actually used in the CMakeLists.txt files.
+# one needs to change the WX_SOURCE_DIR definition below.
+# This is also the reason why neither PROJECT_SOURCE_DIR nor CMAKE_SOURCE_DIR
+# are ever actually used in the CMakeLists.txt files.
 set(WX_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 # Set a helper var to designate the directory where the CMake files are (note
 # that this is *not* the CMAKE_BINARY_DIR). This variable should be used 
