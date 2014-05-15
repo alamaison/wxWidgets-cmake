@@ -1,0 +1,126 @@
+# wxwidgets.cmake
+
+# Add our custom FindXXX() to the module include path
+list(APPEND CMAKE_MODULE_PATH "${WX_CMAKE_DIR}/CMakeModules")
+
+# Include utilities
+include("${WX_CMAKE_DIR}/utils.cmake")
+
+# Include shared CMake file (settings that are common to the
+# all combinations of OS/compiler/port)
+include("${WX_CMAKE_DIR}/init_common.cmake")
+
+# Compatibility chart
+#          msvc        win-gcc        unix-gcc
+#   msw      *            *
+#   gtk      *            *              *
+#   osx                                  *
+#  univ      *            *              *
+
+# Setup the OS+compiler platform
+include("${WX_CMAKE_DIR}/init_platform.cmake")
+
+# Setup the port to build
+include("${WX_CMAKE_DIR}/init_port.cmake")
+
+# Include port-specific CMake file
+include("${WX_CMAKE_DIR}/wx${WXBUILD_PORT}.cmake")
+
+# Include the port-specific setup.h CMake options. This will define the default
+# options in the cache as per the actual defaults in 'setup0.h', and will also
+# create the following variables:
+# - WXBUILD_ALL_OPTIONS: all the configurable options (e.g. wxUSE_XYZ)
+# - [more to come?]
+# Include common parts for all ports
+include("${WX_CMAKE_DIR}/setups/wxsetup.cmake")
+# Include port-specific setup options
+include("${WX_CMAKE_DIR}/setups/${WXBUILD_PORT}/wxsetup.cmake")
+
+# Generate the corresponding 'setup.h' file. Will also add the directory
+# where setup.h is located to the compiler's include path.
+wx_regen_setup_h()
+
+# Include the source file lists
+include("${WX_CMAKE_DIR}/files.cmake")
+
+# Prepare general options
+option(WXBUILD_SAMPLES "Build the samples" OFF)
+
+# Instruct CMake to handle the FOLDER property on targets
+# (why this is needed in the first place I have no idea)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+
+# ------------------------------------------------------
+#                    Dependencies
+# ------------------------------------------------------
+
+# Helper macro to add a library. If the target name does not match
+# the directory name, pass the name as 2nd argument
+macro (wx_add_dependency DIR_NAME)
+	add_subdirectory(${WX_CMAKE_DIR}/CMakeLists/${DIR_NAME})
+	if (${ARGC} GREATER 1)
+		set(_target ${ARGV1})
+	else ()
+		set(_target ${DIR_NAME})
+	endif ()
+	set_target_properties(${_target} PROPERTIES FOLDER "Dependencies")
+endmacro ()
+
+if (NOT WXBUILD_SYSTEM_ZLIB)
+	wx_add_dependency(wxzlib)
+endif()
+if (NOT WXBUILD_SYSTEM_PNG)
+	wx_add_dependency(wxpng)
+endif()
+if (NOT WXBUILD_SYSTEM_JPEG)
+	wx_add_dependency(wxjpeg)
+endif()
+if (NOT WXBUILD_SYSTEM_TIFF)
+	wx_add_dependency(wxtiff)
+endif()
+if (WXSETUP_wxUSE_REGEX)
+	wx_add_dependency(wxregex)
+endif()
+
+wx_add_dependency(wxexpat expat)
+wx_add_dependency(wxscintilla)
+
+# ------------------------------------------------------
+#                   Core libraries
+# ------------------------------------------------------
+
+set(_core_libs
+	adv
+	aui
+	base
+	core
+	gl
+	html
+	media
+	net
+	propgrid
+	qa
+	ribbon
+	richtext
+	stc
+	webview
+	xml
+	xrc
+)
+
+foreach (_lib ${_core_libs})
+	add_subdirectory(${WX_CMAKE_DIR}/CMakeLists/${_lib})
+	set_target_properties(${_lib} PROPERTIES FOLDER "Core libraries")
+endforeach ()
+
+# ------------------------------------------------------
+#                       Samples
+# ------------------------------------------------------
+
+if (WXBUILD_SAMPLES)
+	# Keep the samples in the tree for the moment, as it's a huge PITA to move
+	# them into their own directories under ${WX_CMAKE_DIR}/CMakeLists
+	add_subdirectory(${WX_SOURCE_DIR}/samples)
+endif ()
+
