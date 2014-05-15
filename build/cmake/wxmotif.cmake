@@ -1,7 +1,7 @@
-# Set the base flags for the GTK port
+# Set the base flags for the Motif port
 add_definitions(-D__WXMOTIF__)
 
-# GTK port uses the configuration system
+# Motif port uses the configuration system
 include("${CMAKE_CURRENT_LIST_DIR}/wxconfigure.cmake")
 
 find_package(Motif REQUIRED)
