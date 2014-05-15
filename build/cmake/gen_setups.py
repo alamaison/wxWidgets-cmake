@@ -5,8 +5,6 @@
 This program builds the setup0.cmake.h files for all platforms out of
 their respective setup0.h files. It also creates the appropriate 
 'wxsetup.cmake' files.
-The list of ports is recorded as 'ports.cmake' so as to accessible
-from within CMake scripts (for user documentation purposes, mostly).
 '''
 
 import sys
@@ -506,130 +504,7 @@ def main():
 		
 	return 0
    
-   
-	# Options that are in setup0.h but are platform-dependent are not made available
-	# for modification through CMake. The actual variable is 'specifics' but we build
-	# it out of the two lists: constants to ignore, and constants for which only the
-	# first definition should be used.
-	#ignore_list = set(['wxUSE_WEBVIEW_IE', 'wxUSE_WEBVIEW_WEBKIT', 'wxUSE_AUTOID_MANAGEMENT', 'wxUSE_GRAPHICS_CONTEXT'])
-	#first_defines_list = set()
-	#specifics = dict([(x, 'ignore') for x in ignore_list] + [(x, 'first') for x in first_defines_list])
-	
-	# Port-specific options that should be treated specially as well (same format as 'specifics' above)
-	#port_specifics = {
-	#	'osx': {'wxUSE_STACKWALKER': 'ignore', 'wxUSE_SELECT_DISPATCHER':'ignore', 'wxUSE_EPOLL_DISPATCHER':'ignore'},
-	#	'univ': {'wxUSE_ALL_THEMES': 'first', 'wxUSE_THEME_GTK': 'first', 'wxUSE_THEME_METAL': 'first', 'wxUSE_THEME_MONO': 'first', 'wxUSE_THEME_WIN32': 'first'},
-	#}
-	
-	#missing_constants = {
-	#	'wxUSE_LIBMSPACK': '0',
-	#	'wxUSE_SELECT_DISPATCHER': '${HAVE_SYS_SELECT_H}',
-	#}
-	
-	# Lines to remove entirely if this word is met
-	defs_to_remove = set(['__WXGTK20__', '__WXGTK210__', '__WXGTK218__', '__WXGTK3__'])
-	
-	for port in ports.itervalues():
-		
-		print "Processing port '%s'" % port['name']
-		
-		# The list of available settings for this port (will be filled
-		# by the loop)
-		port['defines'] = {}
-		
-		# Merge general specifics with port specifics
-		#this_specifics = specifics if port['name'] not in port_specifics else dict(specifics.items() + port_specifics[port['name']].items())
-		
-		# The final CMake-readable file
-		cmake_setup_lines = []
-		
-		with file(port['setup0.h'], 'r') as f:
-			seen = set()
-			last_define_line = 0
-			for line in f.readlines():
-				cmake_setup_lines.append(line)
-				define01_found = define01_re.match(line)
-				if define01_found:
-					indent1, indent2, spacer1, constant, spacer2, value, trailing = define01_found.groups()
-					print '*' if len(indent1) else ' ', '!' if constant in seen else ' ', constant, value 
-					seen.add(constant)
-					continue
-					try:
-						action = this_specifics[constant]
-					except KeyError:
-						action = 'keep'
-					
-					if value not in ('0','1'):
-						# Values that are not 0 or 1 are actually derived from other
-						# configurable values. Keep these out of CMake's reach.
-						assert value.startswith('wxUSE')
-						continue
-						
-					if action == 'ignore':
-						continue
-					else:
-						if action == 'first' and constant in port['defines']:
-							continue
-						assert constant not in port['defines']
-						port['defines'][constant] = value
-						cmake_setup_lines.pop()
-						cmake_setup_lines.append('#cmakedefine01%s%s\n' % (spacer1, constant))
-						if trailing.strip() != '':
-							# Some configuration variables have the form
-							# #define wxUSE_FOOBAR 1  // wxFooBar
-							# We can't let this as-is because #cmakedefine01 chokes on such lines
-							# Therefore we put the comment on the next line
-							cmake_setup_lines.append('        %s\n' % trailing.strip())
-						last_define_line = len(cmake_setup_lines)-1
-				
-				else:	
-					# Full '#define FOO bar' was not found, now look for
-					# '#define FOO'
-					found = define_re.match(line)
-					if found:
-						ident, spacer, constant = found.groups()
-						if constant in defs_to_remove:
-							cmake_setup_lines.pop()
-							cmake_setup_lines.append('/* #undef %s */ /* Removed by gen_setups.py */\n' % constant)
-							
-							
-			missing = set(missing_constants.keys()) - set(port['defines'].keys())
-			lineno = last_define_line+1
-			for to_add in missing:
-				default_value = missing_constants[to_add]
-				port['defines'][to_add] = default_value
-				cmake_setup_lines.insert(lineno, "/* Added by 'gen_setups.py' */\n")
-				cmake_setup_lines.insert(lineno+1, '#cmakedefine01 %s\n' % (to_add))
-				lineno += 2
-		break		
-		target_dirname = os.path.join(whereami, 'setups', port['name'])
-		if not os.path.isdir(target_dirname):
-			os.makedirs(target_dirname)
-		
-		cmake_setup_h = os.path.join(target_dirname, 'setup0.cmake.h')
-		with file(cmake_setup_h, 'w') as f:
-			f.writelines(cmake_setup_lines)
-			
-		cmake_wxsetup = os.path.join(target_dirname, 'wxsetup.cmake')
-		with file(cmake_wxsetup, 'w') as f:
-			for constant, value in port['defines'].iteritems():
-				cmake_constant = 'WXSETUP_' + constant
-				help = 'Toggle %s' % constant
-				if value in ('0','1'):
-					cmake_value = 'ON' if value == '1' else 'OFF'
-				else:
-					cmake_value = value
-				setopt = 'option(%s "%s" %s)\n' % (cmake_constant, help, cmake_value)
-				f.write(setopt)
-			optlist = ' '.join(sorted(port['defines']))
-			f.write('set(WXBUILD_ALL_OPTIONS %s)\n' % optlist)
-	
-	port_names_file = 'ports.cmake'
-	with file(port_names_file, 'w') as f:
-		f.write('set(WXBUILD_PORTS %s)\n' % ' '.join(['"%s"'%x for x in ports]))
-		f.write('set(WXBUILD_PORTS_NAMES "%s")\n' % ', '.join(ports.keys()))
 
-	return 0
 		
 if __name__ == '__main__':
 	sys.exit(main())
