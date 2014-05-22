@@ -2,12 +2,21 @@ set(LIB_NAME core)
 
 if (NOT WXBUILD_SYSTEM_PNG)
 	include_directories(${WX_SOURCE_DIR}/src/png)
+else()
+    include_directories(${PNG_INCLUDE_DIR})
+    add_definitions(${PNG_DEFINITIONS})
 endif ()
+
 if (NOT WXBUILD_SYSTEM_JPEG)
 	include_directories(${WX_SOURCE_DIR}/src/jpeg)
+else()
+    include_directories(${JPEG_INCLUDE_DIR})
 endif ()
+
 if (NOT WXBUILD_SYSTEM_TIFF)
 	include_directories(${WX_SOURCE_DIR}/src/tiff/libtiff)
+else()
+    include_directories(${TIFF_INCLUDE_DIR})
 endif ()
 
 include_directories(${WXBUILD_PORT_INCLUDE_DIRS})

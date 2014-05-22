@@ -2,7 +2,11 @@ set(LIB_NAME base)
 
 if (NOT WXBUILD_SYSTEM_ZLIB)
 	include_directories(${WX_SOURCE_DIR}/src/zlib)
+else()
+    include_directories(${ZLIB_INCLUDE_DIRS})
+    add_definitions(-DZLIB_DLL)
 endif ()
+
 include_directories(${WX_SOURCE_DIR}/src/regex)
 
 add_definitions(-DWXMAKINGDLL_BASE -DwxUSE_BASE=1 -DwxUSE_GUI=0)

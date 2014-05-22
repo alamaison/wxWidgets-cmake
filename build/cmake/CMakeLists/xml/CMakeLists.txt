@@ -2,7 +2,11 @@ set(LIB_NAME xml)
 
 add_definitions(-DWXMAKINGDLL_XML -DwxUSE_BASE=0 -DWXUSINGDLL)
 
-include_directories(${WXBUILD_PORT_INCLUDE_DIRS} ${WX_SOURCE_DIR}/src/expat/lib)
+if (NOT WXBUILD_SYSTEM_EXPAT)
+    include_directories(${WXBUILD_PORT_INCLUDE_DIRS} ${WX_SOURCE_DIR}/src/expat/lib)
+else ()
+    include_directories(${WXBUILD_PORT_INCLUDE_DIRS} ${EXPAT_INCLUDE_DIRS})
+endif ()
 
 set(LIB_SRC
 	${WXFILES_XML_SRC}
@@ -23,8 +27,12 @@ add_library(${LIB_NAME} SHARED
 )
 
 set(_deps)
-
 list(APPEND _deps ${WXBUILD_PORT_LIBRARIES})
+if (NOT WXBUILD_SYSTEM_EXPAT)
+	list(APPEND _deps expat)
+else ()
+	list(APPEND _deps ${EXPAT_LIBRARIES})
+endif ()
 
-target_link_libraries(${LIB_NAME} core expat ${_deps})
+target_link_libraries(${LIB_NAME} core ${_deps})
 

@@ -88,7 +88,7 @@ set(WXFILES_BASE_WIN32_SRC
 # BASE_AND_GUI_WIN32_SRC
 set(WXFILES_BASE_AND_GUI_WIN32_SRC
 	${SRC}/src/msw/main.cpp
-	${SRC}/src/msw/mslu.cpp
+#	${SRC}/src/msw/mslu.cpp - not found
 	${SRC}/src/msw/volume.cpp
 )
 
@@ -113,7 +113,7 @@ set(WXFILES_BASE_WIN32_HDR
 	${HDR}/wx/msw/gccpriv.h
 	${HDR}/wx/msw/libraries.h
 	${HDR}/wx/msw/mimetype.h
-	${HDR}/wx/msw/mslu.h
+#	${HDR}/wx/msw/mslu.h - not found
 	${HDR}/wx/msw/private.h
 	${HDR}/wx/msw/regconf.h
 	${HDR}/wx/msw/registry.h

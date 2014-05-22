@@ -61,6 +61,20 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 elseif (MSVC)
 
 	# Microsoft Visual C++
+    if(MSVC OR MSVC_IDE)
+        if(CMAKE_CL_64)
+            set_target_properties(${the_target} PROPERTIES STATIC_LIBRARY_FLAGS "/machine:x64")
+            add_definitions(-D_WIN64)
+        endif()
+      #TODO: add other toolsets, i.e. v110_xp  
+      if( MSVC_VERSION GREATER 1600 )
+        option(WX_USE_XP_TOOLSET "Set ON to use XP toolset" OFF)
+        if(WX_USE_XP_TOOLSET)
+            set(CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE) 
+            add_definitions(-D_USING_V120_SDK71_)
+        endif()
+      endif() 
+    endif()
 	
 	# __VISUALC__ is actually set directly from within the header files ... sigh, I wish I had seen that before
 	# if (NOT WXBUILD_MSVC_COMPILER)

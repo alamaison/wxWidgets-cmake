@@ -29,5 +29,25 @@ set(WX_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 # used to locate files for inclusion].
 set(WX_CMAKE_DIR ${PROJECT_SOURCE_DIR}/build/cmake)
 
+# parse the version number from gdal_version.h and include in wxMAJOR_VERSION and wxMINOR_VERSION
+file(READ ${PROJECT_SOURCE_DIR}/include/wx/version.h WX_VERSION_H_CONTENTS)
+string(REGEX MATCH "wxMAJOR_VERSION[ \t]+([0-9]+)"
+  wxMAJOR_VERSION ${WX_VERSION_H_CONTENTS})
+string (REGEX MATCH "([0-9]+)"
+  wxMAJOR_VERSION ${wxMAJOR_VERSION})
+string(REGEX MATCH "wxMINOR_VERSION[ \t]+([0-9]+)"
+  wxMINOR_VERSION ${WX_VERSION_H_CONTENTS})
+string (REGEX MATCH "([0-9]+)"
+  wxMINOR_VERSION ${wxMINOR_VERSION})
+string(REGEX MATCH "wxRELEASE_NUMBER[ \t]+([0-9]+)"
+  wxRELEASE_NUMBER ${WX_VERSION_H_CONTENTS})  
+string (REGEX MATCH "([0-9]+)"
+  wxRELEASE_NUMBER ${wxRELEASE_NUMBER})
+    
+# Setup package meta-data
+set(WX_VERSION ${wxMAJOR_VERSION}.${wxMINOR_VERSION}.${wxRELEASE_NUMBER})
+message(STATUS "wxwidgets version=[${WX_VERSION}]")
+
+set(CMAKE_COLOR_MAKEFILE ON)
 # Now we can include the files doing the real work.
 include("${WX_CMAKE_DIR}/wxwidgets.cmake")

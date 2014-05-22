@@ -79,12 +79,20 @@ endif()
 if (NOT WXBUILD_SYSTEM_TIFF)
 	wx_add_dependency(wxtiff)
 endif()
+if (NOT WXBUILD_SYSTEM_EXPAT)
+	wx_add_dependency(wxexpat expat)
+endif()
 if (WXSETUP_wxUSE_REGEX)
 	wx_add_dependency(wxregex)
 endif()
 
-wx_add_dependency(wxexpat expat)
 wx_add_dependency(wxscintilla)
+
+# uninstall target
+configure_file(
+    "${WX_SOURCE_DIR}/build/cmake/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
 
 # ------------------------------------------------------
 #                   Core libraries
@@ -124,3 +132,6 @@ if (WXBUILD_SAMPLES)
 	add_subdirectory(${WX_SOURCE_DIR}/samples)
 endif ()
 
+
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)

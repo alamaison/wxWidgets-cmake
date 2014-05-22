@@ -13,3 +13,4 @@ if (CYGWIN)
 	include("${CMAKE_CURRENT_LIST_DIR}/wxconfigure.cmake")
 	list(APPEND CONFIGURATION_DIRECTIVES "#define wxUSE_LIBMSPACK 0")
 endif ()
+
