@@ -34,6 +34,12 @@ set(LIB_HEADERS
 	${WXFILES_ALL_GUI_HEADERS}
 )
 
+foreach (hdr ${LIB_HEADERS})
+	# There are .cpp files in the headers. To exclude all of them from compilation,
+	# we use this command unconditionally (it does no harm on .h files)
+	set_source_files_properties(${hdr} PROPERTIES HEADER_FILE_ONLY TRUE)
+endforeach ()
+
 wx_set_pch(LIB_SRC ${WX_SOURCE_DIR}/src/common/dummy.cpp wx/wxprec.h "${WX_SOURCE_DIR}/include/wx/wxprec.h")
 
 wx_set_source_groups()
