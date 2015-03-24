@@ -32,7 +32,6 @@ set(LIB_SRC_LEXERS
 	${LIB_SRC_DIR}/lexers/LexCsound.cxx
 	${LIB_SRC_DIR}/lexers/LexCSS.cxx
 	${LIB_SRC_DIR}/lexers/LexD.cxx
-	${LIB_SRC_DIR}/lexers/LexDMAP.cxx
 	${LIB_SRC_DIR}/lexers/LexECL.cxx
 	${LIB_SRC_DIR}/lexers/LexEiffel.cxx
 	${LIB_SRC_DIR}/lexers/LexErlang.cxx
@@ -46,8 +45,6 @@ set(LIB_SRC_LEXERS
 	${LIB_SRC_DIR}/lexers/LexHTML.cxx
 	${LIB_SRC_DIR}/lexers/LexInno.cxx
 	${LIB_SRC_DIR}/lexers/LexKix.cxx
-	${LIB_SRC_DIR}/lexers/LexKVIrc.cxx
-	${LIB_SRC_DIR}/lexers/LexLaTeX.cxx
 	${LIB_SRC_DIR}/lexers/LexLisp.cxx
 	${LIB_SRC_DIR}/lexers/LexLout.cxx
 	${LIB_SRC_DIR}/lexers/LexLua.cxx
@@ -69,7 +66,6 @@ set(LIB_SRC_LEXERS
 	${LIB_SRC_DIR}/lexers/LexPB.cxx
 	${LIB_SRC_DIR}/lexers/LexPerl.cxx
 	${LIB_SRC_DIR}/lexers/LexPLM.cxx
-	${LIB_SRC_DIR}/lexers/LexPO.cxx
 	${LIB_SRC_DIR}/lexers/LexPOV.cxx
 	${LIB_SRC_DIR}/lexers/LexPowerPro.cxx
 	${LIB_SRC_DIR}/lexers/LexPowerShell.cxx
@@ -79,7 +75,6 @@ set(LIB_SRC_LEXERS
 	${LIB_SRC_DIR}/lexers/LexR.cxx
 	${LIB_SRC_DIR}/lexers/LexRebol.cxx
 	${LIB_SRC_DIR}/lexers/LexRuby.cxx
-	${LIB_SRC_DIR}/lexers/LexRust.cxx
 	${LIB_SRC_DIR}/lexers/LexScriptol.cxx
 	${LIB_SRC_DIR}/lexers/LexSmalltalk.cxx
 	${LIB_SRC_DIR}/lexers/LexSML.cxx
@@ -87,7 +82,6 @@ set(LIB_SRC_LEXERS
 	${LIB_SRC_DIR}/lexers/LexSpecman.cxx
 	${LIB_SRC_DIR}/lexers/LexSpice.cxx
 	${LIB_SRC_DIR}/lexers/LexSQL.cxx
-	${LIB_SRC_DIR}/lexers/LexSTTXT.cxx
 	${LIB_SRC_DIR}/lexers/LexTACL.cxx
 	${LIB_SRC_DIR}/lexers/LexTADS3.cxx
 	${LIB_SRC_DIR}/lexers/LexTAL.cxx
@@ -104,7 +98,6 @@ set(LIB_SRC_LEXERS
 
 set(LIB_SRC_LEXLIB
 	${LIB_SRC_DIR}/lexlib/Accessor.cxx
-	${LIB_SRC_DIR}/lexlib/CharacterCategory.cxx
 	${LIB_SRC_DIR}/lexlib/CharacterSet.cxx
 	${LIB_SRC_DIR}/lexlib/LexerBase.cxx
 	${LIB_SRC_DIR}/lexlib/LexerModule.cxx
@@ -118,8 +111,6 @@ set(LIB_SRC_LEXLIB
 set(LIB_SRC_BASE
 	${LIB_SRC_DIR}/src/AutoComplete.cxx
 	${LIB_SRC_DIR}/src/CallTip.cxx
-	${LIB_SRC_DIR}/src/CaseConvert.cxx
-	${LIB_SRC_DIR}/src/CaseFolder.cxx
 	${LIB_SRC_DIR}/src/Catalogue.cxx
 	${LIB_SRC_DIR}/src/CellBuffer.cxx
 	${LIB_SRC_DIR}/src/CharClassify.cxx

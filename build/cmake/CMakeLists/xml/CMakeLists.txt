@@ -1,6 +1,10 @@
 set(LIB_NAME xml)
 
-add_definitions(-DWXMAKINGDLL_XML -DwxUSE_BASE=0 -DWXUSINGDLL)
+add_definitions(-DwxUSE_BASE=0)
+
+if(BUILD_SHARED_LIBS)
+  add_definitions(-DWXMAKINGDLL_XML -DWXUSINGDLL)
+endif()
 
 if (NOT WXBUILD_SYSTEM_EXPAT)
     include_directories(${WXBUILD_PORT_INCLUDE_DIRS} ${WX_SOURCE_DIR}/src/expat/lib)
@@ -20,7 +24,7 @@ wx_set_pch(LIB_SRC ${WX_SOURCE_DIR}/src/common/dummy.cpp wx/wxprec.h "${WX_SOURC
 
 wx_set_source_groups()
 
-add_library(${LIB_NAME} SHARED
+add_library(${LIB_NAME}
 	${LIB_SRC}
 	${LIB_HEADERS}
 	${PROJECT_BINARY_DIR}/include/wx/setup.h
@@ -35,4 +39,3 @@ else ()
 endif ()
 
 target_link_libraries(${LIB_NAME} core ${_deps})
-
