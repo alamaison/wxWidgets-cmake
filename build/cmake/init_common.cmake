@@ -19,6 +19,13 @@ if (WXBUILD_UNIVERSAL)
 	add_definitions(-DwxUNIV=1 -D__WXUNIVERSAL__)
 endif ()
 
+# Setup the add_library lib type depending on option WXBUILD_SHARED_LIBS
+if (WXBUILD_SHARED_LIBS)
+	set(WXBUILD_SHARED_OR_STATIC "SHARED")
+else ()
+	set(WXBUILD_SHARED_OR_STATIC "STATIC")
+endif ()
+
 
 # Find main 3rd party libraries and set defaults accordingly 
 # (always prefer system libs over wxWidget's). Probe the system

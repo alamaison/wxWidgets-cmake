@@ -2,7 +2,7 @@ set(LIB_NAME stc)
 
 add_definitions(-DwxUSE_BASE=0 -D__WX__ -DSCI_LEXER -DLINK_LEXERS)
 
-if(BUILD_SHARED_LIBS)
+if(WXBUILD_SHARED_LIBS)
   add_definitions(-DWXMAKINGDLL_STC -DWXUSINGDLL)
 endif()
 
@@ -21,7 +21,7 @@ wx_set_pch(LIB_SRC ${WX_SOURCE_DIR}/src/common/dummy.cpp wx/wxprec.h "${WX_SOURC
 
 wx_set_source_groups()
 
-add_library(${LIB_NAME}
+add_library(${LIB_NAME} ${WXBUILD_SHARED_OR_STATIC}
 	${LIB_SRC}
 	${LIB_HEADERS}
 	${PROJECT_BINARY_DIR}/include/wx/setup.h
