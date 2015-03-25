@@ -2,7 +2,7 @@ set(LIB_NAME xrc)
 
 add_definitions(-DwxUSE_BASE=0)
 
-if(BUILD_SHARED_LIBS)
+if(WXBUILD_SHARED_LIBS)
   add_definitions(-DWXMAKINGDLL_XRC -DWXUSINGDLL)
 endif()
 
