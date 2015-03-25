@@ -11,10 +11,14 @@ if (WXSETUP_wxUSE_REGEX)
 	include_directories(${WX_SOURCE_DIR}/src/regex)
 endif()
 
-add_definitions(-DWXMAKINGDLL_BASE -DwxUSE_BASE=1 -DwxUSE_GUI=0)
+add_definitions(-DwxUSE_BASE=1 -DwxUSE_GUI=0)
 
-set(LIB_SRC 
-	${WXFILES_BASE_SRC} 
+if(BUILD_SHARED_LIBS)
+  add_definitions(-DWXMAKINGDLL_BASE)
+endif()
+
+set(LIB_SRC
+	${WXFILES_BASE_SRC}
 	${WXFILES_BASE_AND_GUI_SRC}
 	${WXFILES_BASE_PLATFORM_SRC}
 	${WXFILES_BASE_AND_GUI_PLATFORM_SRC}
@@ -35,7 +39,7 @@ wx_set_pch(LIB_SRC ${WX_SOURCE_DIR}/src/common/dummy.cpp wx/wxprec.h "${WX_SOURC
 
 wx_set_source_groups()
 
-add_library(${LIB_NAME} SHARED
+add_library(${LIB_NAME}
 	${LIB_SRC}
 	${LIB_HEADERS}
 	${PROJECT_BINARY_DIR}/include/wx/setup.h

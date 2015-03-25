@@ -21,7 +21,11 @@ endif ()
 
 include_directories(${WXBUILD_PORT_INCLUDE_DIRS})
 
-add_definitions(-DWXMAKINGDLL_CORE -DwxUSE_BASE=0 -DWXUSINGDLL)
+add_definitions(-DwxUSE_BASE=0)
+
+if(BUILD_SHARED_LIBS)
+  add_definitions(-DWXMAKINGDLL_CORE -DWXUSINGDLL)
+endif()
 
 set(LIB_SRC
 	${WXFILES_BASE_AND_GUI_SRC}
@@ -44,7 +48,7 @@ wx_set_pch(LIB_SRC ${WX_SOURCE_DIR}/src/common/dummy.cpp wx/wxprec.h "${WX_SOURC
 
 wx_set_source_groups()
 
-add_library(${LIB_NAME} SHARED
+add_library(${LIB_NAME}
 	${LIB_SRC}
 	${LIB_HEADERS}
 	${PROJECT_BINARY_DIR}/include/wx/setup.h

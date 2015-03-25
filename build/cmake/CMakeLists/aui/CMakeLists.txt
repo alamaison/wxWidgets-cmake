@@ -1,6 +1,10 @@
 set(LIB_NAME aui)
 
-add_definitions(-DWXMAKINGDLL_AUI -DwxUSE_BASE=0 -DWXUSINGDLL)
+add_definitions(-DwxUSE_BASE=0)
+
+if(BUILD_SHARED_LIBS)
+  add_definitions(-DWXMAKINGDLL_AUI -DWXUSINGDLL)
+endif()
 
 include_directories(${WXBUILD_PORT_INCLUDE_DIRS})
 
@@ -16,7 +20,7 @@ wx_set_pch(LIB_SRC ${WX_SOURCE_DIR}/src/common/dummy.cpp wx/wxprec.h "${WX_SOURC
 
 wx_set_source_groups()
 
-add_library(${LIB_NAME} SHARED
+add_library(${LIB_NAME}
 	${LIB_SRC}
 	${LIB_HEADERS}
 	${PROJECT_BINARY_DIR}/include/wx/setup.h
@@ -27,4 +31,3 @@ set(_deps)
 list(APPEND _deps ${WXBUILD_PORT_LIBRARIES})
 
 target_link_libraries(${LIB_NAME} core ${_deps})
-

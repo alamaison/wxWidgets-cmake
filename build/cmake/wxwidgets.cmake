@@ -44,6 +44,9 @@ wx_regen_setup_h()
 include("${WX_CMAKE_DIR}/files.cmake")
 
 # Prepare general options
+## BUILD_SHARED_LIBS doesn't need a WX prefix because it
+## is built into CMake and we are just exposing it
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(WXBUILD_SAMPLES "Build the samples" OFF)
 
 # Instruct CMake to handle the FOLDER property on targets
