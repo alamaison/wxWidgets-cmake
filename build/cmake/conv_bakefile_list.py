@@ -3,6 +3,9 @@
 
 '''
 Converts 'files.bkl' into a CMake file
+
+Run in $(TOP)/build/cmake/, redirecting output to 'files.cmake', i.e.
+you@$(TOP)/build/cmake> python conv_bakefiles.py > files.cmake
 '''
 
 import sys
