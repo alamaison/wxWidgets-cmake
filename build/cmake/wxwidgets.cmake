@@ -144,9 +144,7 @@ endforeach ()
 # ------------------------------------------------------
 
 if (WXBUILD_SAMPLES)
-	# Keep the samples in the tree for the moment, as it's a huge PITA to move
-	# them into their own directories under ${WX_CMAKE_DIR}/CMakeLists
-	add_subdirectory(${WX_SOURCE_DIR}/samples)
+	add_subdirectory(${WX_CMAKE_DIR}/CMakeLists/samples)
 endif ()
 
 

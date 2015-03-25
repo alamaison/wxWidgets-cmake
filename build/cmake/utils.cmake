@@ -162,7 +162,9 @@ macro(wx_add_sample name more_deps)
 
 	set(APP_NAME sample_${name})
 
-	add_definitions("-DWXUSINGDLL")
+	if (WXBUILD_SHARED_LIBS)
+		add_definitions("-DWXUSINGDLL")
+	endif ()
 
 	if (WIN32)
 		set(PLATFORM_SPECIFIC_CONTROL WIN32)
