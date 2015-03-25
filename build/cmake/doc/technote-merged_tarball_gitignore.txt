@@ -1,0 +1,76 @@
+2015.03.25 tibo
+
+Example of local .git/info/exclude file (like .gitignore but never
+part of the repo), see
+http://stackoverflow.com/questions/767147/ignore-the-gitignore-file-itself
+
+This can be used when wxWidgets is not checked out (either as submodule, 
+or the other way around: wxWidgets and the CMake build as submodule) 
+but simply unpacked from a tarball. In this case you don't want to have
+anything to do with the wxWidgets source tree (at least in early beta as
+we are). <rant>Bonus points for not using the submodule feature.</rant>
+
+Putting this in a .gitignore is problematic because 1) this would break
+other wxWidgets/Cmake integration schemes (so .gitignore must not
+be committed) but 2) having this .gitignore file floating around 
+uncommitted is nasty because it breaks git tools (so .gitignore must
+be committed).
+
+
+
+# ---------------- example .git/info/exclude ----------------
+
+# git ls-files --others --exclude-from=.git/info/exclude
+# [...]
+
+art/*
+demos/*
+distrib/*
+docs/*
+include/*
+interface/*
+lib/*
+locale/*
+misc/*
+samples/*
+src/*
+tests/*
+utils/*
+
+.travis.yml
+acinclude.m4
+aclocal.m4
+autoconf_inc.m4
+autogen.sh
+BuildSVN.txt
+config.guess
+config.sub
+configure
+configure.in
+descrip.mms
+install-sh
+Makefile.in
+mkinstalldirs
+regen
+setup.h.in
+setup.h_vms
+version-script.in
+wx-config-inplace.in
+wx-config.in
+wxwin.m4
+
+build/aclocal
+build/autoconf_prepend-include
+build/autogen.mk
+build/bakefiles
+build/buildbot
+build/msw
+build/os2
+build/osx
+build/README.txt
+build/script
+build/tools
+build/update-setup-h
+build/wince
+
+_build-*
