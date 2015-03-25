@@ -7,7 +7,9 @@ else()
     add_definitions(-DZLIB_DLL)
 endif ()
 
-include_directories(${WX_SOURCE_DIR}/src/regex)
+if (WXSETUP_wxUSE_REGEX)
+	include_directories(${WX_SOURCE_DIR}/src/regex)
+endif()
 
 add_definitions(-DWXMAKINGDLL_BASE -DwxUSE_BASE=1 -DwxUSE_GUI=0)
 
@@ -45,7 +47,10 @@ if (NOT WXBUILD_SYSTEM_ZLIB)
 else ()
 	list(APPEND _deps ${ZLIB_LIBRARIES})
 endif ()
-list(APPEND _deps wxregex)
+
+if (WXSETUP_wxUSE_REGEX)
+	list(APPEND _deps wxregex)
+endif()
 
 if (${WXBUILD_PLATFORM} STREQUAL "win32")
 	target_link_libraries(${LIB_NAME} ws2_32)
