@@ -36,6 +36,10 @@ include("${WX_CMAKE_DIR}/setups/wxsetup.cmake")
 # Include port-specific setup options
 include("${WX_CMAKE_DIR}/setups/${WXBUILD_PORT}/wxsetup.cmake")
 
+# Options that were forced off through wx_force_option_off() on the first
+# run have been staged - apply them now.
+wx_apply_staged_options_off()
+
 # Generate the corresponding 'setup.h' file. Will also add the directory
 # where setup.h is located to the compiler's include path.
 wx_regen_setup_h()

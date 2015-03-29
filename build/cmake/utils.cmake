@@ -207,13 +207,30 @@ macro (wx_file_inject_before FILENAME PATTERN CONTENTS)
 	#message(FATAL_ERROR stop)
 endmacro (wx_file_inject_before)
 
-# Force a user-selected wxUSE_XXX option to OFF without updating the cache.
+# Force a user-selected (WXSETUP_)wxUSE_XXX option to OFF without updating the cache.
 # This is most certainly called because the compile-time requirements for
-# a feature were not found - see e.g. wxconfigure.cmake.
+# a feature were not found - see e.g. wxconfigure.cmake - but the user has
+# selected this option (or it is set to 1 in wx/setup0.h).
 # Displays a warning that can be turned off.
+# On the first Configure run, the (WXSETUP_)wxUSE_XXX option is not defined yet. Stage
+# the calls for deferred execution.
 macro (wx_force_option_off SHORT_OPT MISSING)
+	# Internally, this option is prefixed with 'WXSETUP_' to avoid cluttering
+	# the CMake namespace (and allow easy grouping in the GUIs)
 	set(_opt "WXSETUP_${SHORT_OPT}")
-	if (${_opt})
+	if (NOT DEFINED ${_opt})
+		# Stage the request if the option is not defined
+		if (NOT DEFINED WXBUILD_STAGED_OPTIONS_OFF)
+			set(WXBUILD_STAGED_OPTIONS_OFF "")
+		endif ()
+		# Store the option name and the reason as a pair, packed using the
+		# trick by Clinton Stimpson (http://www.cmake.org/pipermail/cmake/2011-November/047833.html)
+		string(REPLACE ";" "\\;" _missing "${MISSING}")
+		list(APPEND WXBUILD_STAGED_OPTIONS_OFF "${SHORT_OPT}\;${_missing}")
+	elseif (${_opt})
+		# Normal processing: set the CMake var to OFF (*not* touching the
+		# value in the cache), and display a warning (unless this warning
+		# has been explicitly turned off)
 		set(${_opt} OFF)
 		set(_elems "")
 		foreach (i ${MISSING})
@@ -229,6 +246,18 @@ macro (wx_force_option_off SHORT_OPT MISSING)
 		endif ()
 	endif ()
 endmacro (wx_force_option_off)
+
+# Flush all options staged by wx_force_option_off
+macro (wx_apply_staged_options_off)
+	foreach (_pair ${WXBUILD_STAGED_OPTIONS_OFF})
+		message("pair '${_pair}'")
+		list(GET _pair 0 _opt)
+		list(REMOVE_AT _pair 0 _opt) # Two lines for a pop operation (we pop because we can't slice, we have to slice because we don't have a pair but a 2+ items list in which we had escaped the semicolons above - CMake, I'm frowning at you)
+		message("_opt=${_opt}  _reason=${_pair}")
+		wx_force_option_off(${_opt} "${_pair}") 
+	endforeach()
+endmacro()
+
 
 # Simple macro to set a variable to an evaluated condition
 # http://www.cmake.org/pipermail/cmake/2006-March/008755.html
